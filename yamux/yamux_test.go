@@ -3,7 +3,7 @@ package sm_yamux
 import (
 	"testing"
 
-	test "github.com/jbenet/go-stream-mux/test"
+	test "github.com/jbenet/go-stream-muxer/test"
 )
 
 func TestYamuxTransport(t *testing.T) {

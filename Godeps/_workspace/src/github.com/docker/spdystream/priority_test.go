@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/docker/spdystream/spdy"
+	"github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/docker/spdystream/spdy"
 )
 
 func TestPriorityQueueOrdering(t *testing.T) {

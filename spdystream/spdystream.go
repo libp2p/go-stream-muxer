@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	smux "github.com/jbenet/go-stream-mux"
-	ss "github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/docker/spdystream"
+	ss "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/docker/spdystream"
 )
 
 // stream implements smux.Stream using a ss.Stream

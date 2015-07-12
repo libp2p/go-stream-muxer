@@ -8,8 +8,8 @@ package ext
 
 import (
 	"encoding/binary"
-	proto "github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto"
-	"github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto/frame"
+	proto "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto"
+	"github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto/frame"
 	"io"
 	"time"
 )

@@ -1,7 +1,7 @@
 package proto
 
 import (
-	"github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto/frame"
+	"github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto/frame"
 	"sync"
 )
 

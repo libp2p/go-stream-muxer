@@ -1,8 +1,8 @@
 package muxado
 
 import (
-	"github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto"
-	"github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto/frame"
+	"github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto"
+	"github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/inconshreveable/muxado/proto/frame"
 )
 
 // streamAdaptor recasts the types of some function calls by the proto/Stream implementation

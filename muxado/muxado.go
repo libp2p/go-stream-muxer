@@ -4,7 +4,7 @@ import (
 	"net"
 
 	smux "github.com/jbenet/go-stream-mux"
-	muxado "github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/inconshreveable/muxado"
+	muxado "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/inconshreveable/muxado"
 )
 
 // stream implements smux.Stream using a ss.Stream

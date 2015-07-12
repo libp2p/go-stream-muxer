@@ -3,7 +3,7 @@ package ws
 import (
 	"bytes"
 	"github.com/gorilla/websocket"
-	"github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/docker/spdystream"
+	"github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/docker/spdystream"
 	"io"
 	"log"
 	"net/http"

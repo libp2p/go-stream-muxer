@@ -4,7 +4,7 @@ import (
 	"net"
 
 	smux "github.com/jbenet/go-stream-mux"
-	mp "github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/whyrusleeping/go-multiplex" // Conn is a connection to a remote peer.
+	mp "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/whyrusleeping/go-multiplex" // Conn is a connection to a remote peer.
 )
 
 type conn struct {

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	smux "github.com/jbenet/go-stream-mux"
-	yamux "github.com/jbenet/go-stream-mux/Godeps/_workspace/src/github.com/hashicorp/yamux"
+	yamux "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/hashicorp/yamux"
 )
 
 // stream implements smux.Stream using a ss.Stream
