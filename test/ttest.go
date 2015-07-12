@@ -283,11 +283,11 @@ func SubtestStress50Conn10Stream50Msg(t *testing.T, tr smux.Transport) {
 	})
 }
 
-func SubtestStress1Conn10000Stream10Msg(t *testing.T, tr smux.Transport) {
+func SubtestStress1Conn1000Stream10Msg(t *testing.T, tr smux.Transport) {
 	SubtestStress(t, Options{
 		tr:        tr,
 		connNum:   1,
-		streamNum: 10000,
+		streamNum: 1000,
 		msgNum:    10,
 		msgMax:    100,
 		msgMin:    100,
@@ -313,7 +313,7 @@ func SubtestAll(t *testing.T, tr smux.Transport) {
 		SubtestStress1Conn1Stream100Msg,
 		SubtestStress1Conn100Stream100Msg,
 		SubtestStress50Conn10Stream50Msg,
-		SubtestStress1Conn10000Stream10Msg,
+		SubtestStress1Conn1000Stream10Msg,
 		SubtestStress1Conn1000Stream100Msg10MB,
 	}
 
