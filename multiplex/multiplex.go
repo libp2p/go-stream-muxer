@@ -1,11 +1,14 @@
 package peerstream_multiplex
 
 import (
+	"errors"
 	"net"
 
 	smux "github.com/jbenet/go-stream-muxer"
 	mp "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/whyrusleeping/go-multiplex" // Conn is a connection to a remote peer.
 )
+
+var ErrUseServe = errors.New("not implemented, use Serve")
 
 type conn struct {
 	*mp.Multiplex
@@ -22,6 +25,11 @@ func (c *conn) IsClosed() bool {
 // OpenStream creates a new stream.
 func (c *conn) OpenStream() (smux.Stream, error) {
 	return c.Multiplex.NewStream(), nil
+}
+
+// AcceptStream accepts a stream opened by the other side.
+func (c *conn) AcceptStream() (smux.Stream, error) {
+	return nil, ErrUseServe
 }
 
 // Serve starts listening for incoming requests and handles them

@@ -1,12 +1,15 @@
 package peerstream_spdystream
 
 import (
+	"errors"
 	"net"
 	"net/http"
 
 	smux "github.com/jbenet/go-stream-muxer"
 	ss "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/docker/spdystream"
 )
+
+var ErrUseServe = errors.New("not implemented, use Serve")
 
 // stream implements smux.Stream using a ss.Stream
 type stream ss.Stream
@@ -76,6 +79,11 @@ func (c *conn) OpenStream() (smux.Stream, error) {
 	// spdystream does not make forward progress unless you do this.
 	s.Wait()
 	return (*stream)(s), nil
+}
+
+// AcceptStream accepts a stream opened by the other side.
+func (c *conn) AcceptStream() (smux.Stream, error) {
+	return nil, ErrUseServe
 }
 
 // Serve starts listening for incoming requests and handles them

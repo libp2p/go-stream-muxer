@@ -53,15 +53,21 @@ func (c *conn) OpenStream() (smux.Stream, error) {
 	return (*stream)(s), nil
 }
 
+// AcceptStream accepts a stream opened by the other side.
+func (c *conn) AcceptStream() (smux.Stream, error) {
+	s, err := c.yamuxSession().AcceptStream()
+	return (*stream)(s), err
+}
+
 // Serve starts listening for incoming requests and handles them
 // using given StreamHandler
 func (c *conn) Serve(handler smux.StreamHandler) {
 	for { // accept loop
-		s, err := c.yamuxSession().AcceptStream()
+		s, err := c.AcceptStream()
 		if err != nil {
 			return // err always means closed.
 		}
-		go handler((*stream)(s))
+		go handler(s)
 	}
 }
 

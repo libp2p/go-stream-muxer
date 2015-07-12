@@ -27,8 +27,11 @@ type Conn interface {
 	// OpenStream creates a new stream.
 	OpenStream() (Stream, error)
 
-	// Serve starts listening for incoming requests and handles them
-	// using given StreamHandler
+	// AcceptStream accepts a stream opened by the other side.
+	AcceptStream() (Stream, error)
+
+	// Serve starts a loop, accepting incoming requests and calling
+	// `StreamHandler with them. (Use _instead of_ accept. not both.)
 	Serve(StreamHandler)
 }
 
