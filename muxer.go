@@ -32,7 +32,7 @@ type Conn interface {
 	Serve(StreamHandler)
 }
 
-// Transport constructs go-peerstream compatible connections.
+// Transport constructs go-stream-muxer compatible connections.
 type Transport interface {
 
 	// NewConn constructs a new connection
