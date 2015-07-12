@@ -4,7 +4,7 @@ import (
 	"net"
 	"net/http"
 
-	smux "github.com/jbenet/go-stream-mux"
+	smux "github.com/jbenet/go-stream-muxer"
 	ss "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/docker/spdystream"
 )
 

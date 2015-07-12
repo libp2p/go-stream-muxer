@@ -13,7 +13,7 @@ import (
 	"sync"
 	"testing"
 
-	smux "github.com/jbenet/go-stream-mux"
+	smux "github.com/jbenet/go-stream-muxer"
 )
 
 var randomness []byte

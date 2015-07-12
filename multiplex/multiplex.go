@@ -3,7 +3,7 @@ package peerstream_multiplex
 import (
 	"net"
 
-	smux "github.com/jbenet/go-stream-mux"
+	smux "github.com/jbenet/go-stream-muxer"
 	mp "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/whyrusleeping/go-multiplex" // Conn is a connection to a remote peer.
 )
 

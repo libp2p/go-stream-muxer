@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	smux "github.com/jbenet/go-stream-mux"
+	smux "github.com/jbenet/go-stream-muxer"
 	yamux "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/hashicorp/yamux"
 )
 
