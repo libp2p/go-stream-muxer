@@ -28,7 +28,7 @@ Include this badge in your readme if you make a new module that uses abstract-st
 import (
   "net"
 
-  smux "github.com/jbenet/go-stream-mux/yamux"
+  smux "github.com/jbenet/go-stream-muxer/yamux"
 )
 
 func dial() {
