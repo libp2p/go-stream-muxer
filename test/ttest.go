@@ -66,13 +66,29 @@ func echoStream(s smux.Stream) {
 	log("closing stream")
 }
 
-func Serve(t *testing.T, tr smux.Transport, l net.Listener) {
-	for {
-		c1, err := l.Accept()
-		checkErr(t, err)
-		sc1, err := tr.NewConn(c1, true)
-		checkErr(t, err)
-		go sc1.Serve(echoStream)
+func GoServe(t *testing.T, tr smux.Transport, l net.Listener) (done func()) {
+	closed := make(chan struct{}, 1)
+
+	go func() {
+		for {
+			c1, err := l.Accept()
+			if err != nil {
+				select {
+				case <-closed:
+					return // closed naturally.
+				default:
+					checkErr(t, err)
+				}
+			}
+
+			sc1, err := tr.NewConn(c1, true)
+			checkErr(t, err)
+			go sc1.Serve(echoStream)
+		}
+	}()
+
+	return func() {
+		closed <- struct{}{}
 	}
 }
 
@@ -80,8 +96,8 @@ func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
 	log("listening at %s", "localhost:0")
 	l, err := net.Listen("tcp", "localhost:0")
 	checkErr(t, err)
-	go Serve(t, tr, l)
-	defer l.Close()
+	done := GoServe(t, tr, l)
+	defer done()
 
 	log("dialing to %s", l.Addr().String())
 	nc1, err := net.Dial("tcp", l.Addr().String())
@@ -188,7 +204,8 @@ func SubtestStress(t *testing.T, opt Options) {
 
 		l, err := net.Listen("tcp", "localhost:0")
 		checkErr(t, err)
-		go Serve(t, opt.tr, l)
+		done := GoServe(t, opt.tr, l)
+		defer done()
 
 		nla := l.Addr()
 		nc, err := net.Dial(nla.Network(), nla.String())
