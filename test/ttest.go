@@ -10,6 +10,7 @@ import (
 	"os"
 	"reflect"
 	"runtime"
+	"runtime/debug"
 	"sync"
 	"testing"
 
@@ -47,6 +48,7 @@ func randBuf(size int) []byte {
 
 func checkErr(t *testing.T, err error) {
 	if err != nil {
+		debug.PrintStack()
 		t.Fatal(err)
 	}
 }
