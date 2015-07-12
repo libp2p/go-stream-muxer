@@ -125,6 +125,10 @@ func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
 	checkErr(t, err)
 	defer c1.Close()
 
+	// serve the outgoing conn, because some muxers assume
+	// that we _always_ call serve. (this is an error)
+	go c1.Serve(func(smux.Stream) {})
+
 	log("creating stream")
 	s1, err := c1.OpenStream()
 	checkErr(t, err)
@@ -237,6 +241,13 @@ func SubtestStress(t *testing.T, opt Options) {
 			t.Fatal(fmt.Errorf("a.AddConn(%s <--> %s): %s", nc.LocalAddr(), nc.RemoteAddr(), err))
 			return
 		}
+
+		// serve the outgoing conn, because some muxers assume
+		// that we _always_ call serve. (this is an error)
+		go c.Serve(func(s smux.Stream) {
+			log("serving connection")
+			echoStream(s)
+		})
 
 		var wg sync.WaitGroup
 		for i := 0; i < opt.streamNum; i++ {
