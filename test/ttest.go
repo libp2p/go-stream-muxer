@@ -61,9 +61,21 @@ func log(s string, v ...interface{}) {
 
 func echoStream(s smux.Stream) {
 	defer s.Close()
+
 	log("accepted stream")
-	io.Copy(s, s) // echo everything
+	io.Copy(&LogWriter{s}, s) // echo everything
 	log("closing stream")
+}
+
+type LogWriter struct {
+	W io.Writer
+}
+
+func (lw *LogWriter) Write(buf []byte) (int, error) {
+	if testing.Verbose() {
+		log("logwriter: writing %d bytes", len(buf))
+	}
+	return lw.W.Write(buf)
 }
 
 func GoServe(t *testing.T, tr smux.Transport, l net.Listener) (done func()) {
@@ -81,9 +93,13 @@ func GoServe(t *testing.T, tr smux.Transport, l net.Listener) (done func()) {
 				}
 			}
 
+			log("accepted connection")
 			sc1, err := tr.NewConn(c1, true)
 			checkErr(t, err)
-			go sc1.Serve(echoStream)
+			go sc1.Serve(func(s smux.Stream) {
+				log("serving connection")
+				echoStream(s)
+			})
 		}
 	}()
 
@@ -93,9 +109,9 @@ func GoServe(t *testing.T, tr smux.Transport, l net.Listener) (done func()) {
 }
 
 func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
-	log("listening at %s", "localhost:0")
 	l, err := net.Listen("tcp", "localhost:0")
 	checkErr(t, err)
+	log("listening at %s", l.Addr().String())
 	done := GoServe(t, tr, l)
 	defer done()
 
@@ -127,6 +143,7 @@ func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
 	if string(buf2) != string(buf1) {
 		t.Error("buf1 and buf2 not equal: %s != %s", string(buf1), string(buf2))
 	}
+	log("done")
 }
 
 func SubtestStress(t *testing.T, opt Options) {
