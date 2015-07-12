@@ -61,7 +61,6 @@ func log(s string, v ...interface{}) {
 
 func echoStream(s smux.Stream) {
 	defer s.Close()
-
 	log("accepted stream")
 	io.Copy(&LogWriter{s}, s) // echo everything
 	log("closing stream")
@@ -96,10 +95,7 @@ func GoServe(t *testing.T, tr smux.Transport, l net.Listener) (done func()) {
 			log("accepted connection")
 			sc1, err := tr.NewConn(c1, true)
 			checkErr(t, err)
-			go sc1.Serve(func(s smux.Stream) {
-				log("serving connection")
-				echoStream(s)
-			})
+			go sc1.Serve(echoStream)
 		}
 	}()
 
@@ -126,8 +122,8 @@ func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
 	defer c1.Close()
 
 	// serve the outgoing conn, because some muxers assume
-	// that we _always_ call serve. (this is an error)
-	go c1.Serve(func(smux.Stream) {})
+	// that we _always_ call serve. (this is an error?)
+	go c1.Serve(smux.NoOpHandler)
 
 	log("creating stream")
 	s1, err := c1.OpenStream()
@@ -243,10 +239,11 @@ func SubtestStress(t *testing.T, opt Options) {
 		}
 
 		// serve the outgoing conn, because some muxers assume
-		// that we _always_ call serve. (this is an error)
+		// that we _always_ call serve. (this is an error?)
 		go c.Serve(func(s smux.Stream) {
 			log("serving connection")
 			echoStream(s)
+			s.Close()
 		})
 
 		var wg sync.WaitGroup

@@ -16,6 +16,9 @@ type Stream interface {
 // (usually those opened by the remote side)
 type StreamHandler func(Stream)
 
+// NoOpHandler do nothing. close streams as soon as they are opened.
+var NoOpHandler = func(s Stream) { s.Close() }
+
 // Conn is a stream-multiplexing connection to a remote peer.
 type Conn interface {
 	io.Closer
