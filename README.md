@@ -20,4 +20,4 @@ go-stream-muxer is a common interface for stream muxers, with common tests. It w
 
 Include this badge in your readme if you make a new module that uses abstract-stream-muxer API.
 
-![](/img/badge.png)
+![](img/badge.png)
