@@ -29,15 +29,19 @@ func (c *conn) OpenStream() (smux.Stream, error) {
 
 // AcceptStream accepts a stream opened by the other side.
 func (c *conn) AcceptStream() (smux.Stream, error) {
-	return nil, ErrUseServe
+	return c.Multiplex.Accept()
 }
 
 // Serve starts listening for incoming requests and handles them
 // using given StreamHandler
 func (c *conn) Serve(handler smux.StreamHandler) {
-	c.Multiplex.Serve(func(s *mp.Stream) {
-		handler(s)
-	})
+	for {
+		s, err := c.AcceptStream()
+		if err != nil {
+			return
+		}
+		go handler(s)
+	}
 }
 
 // Transport is a go-peerstream transport that constructs
