@@ -10,7 +10,7 @@ import (
 
 var ErrTooLarge = errors.New("incoming message was too large")
 
-const ProtocolID = "/multistream/version1.0.0"
+const ProtocolID = "/multistream/1.0.0"
 
 type HandlerFunc func(io.ReadWriteCloser) error
 
@@ -100,17 +100,7 @@ loop:
 
 		switch tok {
 		case "ls":
-			buf := new(bytes.Buffer)
-			msm.handlerlock.Lock()
-			for proto, _ := range msm.handlers {
-				err := delimWrite(buf, []byte(proto))
-				if err != nil {
-					msm.handlerlock.Unlock()
-					return "", nil, err
-				}
-			}
-			msm.handlerlock.Unlock()
-			err := delimWrite(rwc, buf.Bytes())
+			err := msm.Ls(rwc)
 			if err != nil {
 				return "", nil, err
 			}
@@ -136,6 +126,24 @@ loop:
 		}
 	}
 
+}
+
+func (msm *MultistreamMuxer) Ls(rwc io.Writer) error {
+	buf := new(bytes.Buffer)
+	msm.handlerlock.Lock()
+	for proto, _ := range msm.handlers {
+		err := delimWrite(buf, []byte(proto))
+		if err != nil {
+			msm.handlerlock.Unlock()
+			return err
+		}
+	}
+	msm.handlerlock.Unlock()
+	err := delimWrite(rwc, buf.Bytes())
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (msm *MultistreamMuxer) Handle(rwc io.ReadWriteCloser) error {
