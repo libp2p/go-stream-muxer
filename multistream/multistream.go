@@ -5,7 +5,7 @@ package multistream
 import (
 	"net"
 
-	mss "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/whyrusleeping/go-multistream"
+	mss "github.com/whyrusleeping/go-multistream"
 
 	smux "github.com/jbenet/go-stream-muxer"
 	multiplex "github.com/jbenet/go-stream-muxer/multiplex"

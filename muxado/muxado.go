@@ -3,8 +3,8 @@ package peerstream_muxado
 import (
 	"net"
 
+	muxado "github.com/inconshreveable/muxado"
 	smux "github.com/jbenet/go-stream-muxer"
-	muxado "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/inconshreveable/muxado"
 )
 
 // stream implements smux.Stream using a ss.Stream
@@ -54,7 +54,7 @@ func (c *conn) IsClosed() bool {
 
 // OpenStream creates a new stream.
 func (c *conn) OpenStream() (smux.Stream, error) {
-	s, err := c.ms.Open()
+	s, err := c.ms.OpenStream()
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *conn) OpenStream() (smux.Stream, error) {
 
 // AcceptStream accepts a stream opened by the other side.
 func (c *conn) AcceptStream() (smux.Stream, error) {
-	s, err := c.ms.Accept()
+	s, err := c.ms.AcceptStream()
 	if err != nil {
 		return nil, err
 	}
@@ -83,18 +83,21 @@ func (c *conn) Serve(handler smux.StreamHandler) {
 	}
 }
 
-type transport struct{}
+type transport muxado.Config
 
 // Transport is a go-peerstream transport that constructs
 // spdystream-backed connections.
-var Transport = transport{}
+var Transport = &transport{
+	AcceptBacklog: 2048,
+	MaxWindowSize: 256 * 1 << 10,
+}
 
 func (t transport) NewConn(nc net.Conn, isServer bool) (smux.Conn, error) {
 	var s muxado.Session
 	if isServer {
-		s = muxado.Server(nc)
+		s = muxado.Server(nc, (*muxado.Config)(&t))
 	} else {
-		s = muxado.Client(nc)
+		s = muxado.Client(nc, (*muxado.Config)(&t))
 	}
 	cl := make(chan struct{})
 	go func() {
