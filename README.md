@@ -96,3 +96,9 @@ func echoStream(s smux.Stream) {
   fmt.Println("closing stream")
 }
 ```
+
+## Dependencies
+go-stream-muxer uses gx to manage vendored dependencies. While this package may
+work just fine without the vendored deps, to avoid upstream changes breaking
+the code in this repo, we recommend you run `make deps` to use the set of
+dependencies we have tested with.
