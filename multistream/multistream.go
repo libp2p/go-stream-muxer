@@ -13,13 +13,15 @@ import (
 	yamux "github.com/jbenet/go-stream-muxer/yamux"
 )
 
-type transport struct {
+type Transport struct {
 	mux *mss.MultistreamMuxer
 
 	tpts map[string]smux.Transport
+
+	OrderPreference []string
 }
 
-func NewTransport() smux.Transport {
+func NewTransport() *Transport {
 	mux := mss.NewMultistreamMuxer()
 	mux.AddHandler("/multiplex", nil)
 	mux.AddHandler("/spdystream", nil)
@@ -31,13 +33,27 @@ func NewTransport() smux.Transport {
 		"/yamux":      yamux.DefaultTransport,
 	}
 
-	return &transport{
-		mux:  mux,
-		tpts: tpts,
+	return &Transport{
+		mux:             mux,
+		tpts:            tpts,
+		OrderPreference: []string{"/yamux", "/spdystream", "/multiplex"},
 	}
 }
 
-func (t *transport) NewConn(nc net.Conn, isServer bool) (smux.Conn, error) {
+func NewBlankTransport() *Transport {
+	return &Transport{
+		mux:  mss.NewMultistreamMuxer(),
+		tpts: make(map[string]smux.Transport),
+	}
+}
+
+func (t *Transport) AddTransport(path string, tpt smux.Transport) {
+	t.mux.AddHandler(path, nil)
+	t.tpts[path] = tpt
+	t.OrderPreference = append(t.OrderPreference, path)
+}
+
+func (t *Transport) NewConn(nc net.Conn, isServer bool) (smux.Conn, error) {
 	var proto string
 	if isServer {
 		selected, _, err := t.mux.Negotiate(nc)
@@ -47,7 +63,7 @@ func (t *transport) NewConn(nc net.Conn, isServer bool) (smux.Conn, error) {
 		proto = selected
 	} else {
 		// prefer yamux
-		selected, err := mss.SelectOneOf([]string{"/yamux", "/spdystream", "/multiplex"}, nc)
+		selected, err := mss.SelectOneOf(t.OrderPreference, nc)
 		if err != nil {
 			return nil, err
 		}
