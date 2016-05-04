@@ -5,7 +5,7 @@ import (
 	"net"
 
 	smux "github.com/jbenet/go-stream-muxer"
-	mp "github.com/whyrusleeping/go-multiplex" // Conn is a connection to a remote peer.
+	mp "gx/ipfs/QmSLbJgmwYvjQuMpfW6kUt5KsJeEkjLwXTkRM5DkqR14if/go-multiplex" // Conn is a connection to a remote peer.
 )
 
 var ErrUseServe = errors.New("not implemented, use Serve")

@@ -22,6 +22,14 @@ Include this badge in your readme if you make a new module that uses abstract-st
 
 ![](img/badge.png)
 
+## Installation
+
+```sh
+go get -d github.com/jbenet/go-stream-muxer
+cd $GOPATH/src/github.com/jbenet/go-stream-muxer
+make deps
+```
+
 ## Client example
 
 ```go
@@ -96,9 +104,3 @@ func echoStream(s smux.Stream) {
   fmt.Println("closing stream")
 }
 ```
-
-## Dependencies
-go-stream-muxer uses gx to manage vendored dependencies. While this package may
-work just fine without the vendored deps, to avoid upstream changes breaking
-the code in this repo, we recommend you run `make deps` to use the set of
-dependencies we have tested with.
