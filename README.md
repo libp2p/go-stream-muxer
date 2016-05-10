@@ -22,6 +22,14 @@ Include this badge in your readme if you make a new module that uses abstract-st
 
 ![](img/badge.png)
 
+## Installation
+
+```sh
+go get -d github.com/jbenet/go-stream-muxer
+cd $GOPATH/src/github.com/jbenet/go-stream-muxer
+make deps
+```
+
 ## Client example
 
 ```go

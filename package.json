@@ -1,0 +1,46 @@
+{
+  "author": "whyrusleeping",
+  "bugs": {
+    "url": "https://github.com/jbenet/go-stream-muxer"
+  },
+  "gx": {
+    "dvcsimport": "github.com/jbenet/go-stream-muxer"
+  },
+  "gxDependencies": [
+    {
+      "author": "whyrusleeping",
+      "hash": "QmUNRdBcuEx5oDZpbn8ZvJf8n1nc6S6K1qjdmr85xDawaX",
+      "name": "muxado",
+      "version": "0.0.0"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "QmT8nkh6VVJ2fWgAshstDkDWssAY1EXBhoraqGDfGeVx9Q",
+      "name": "yamux",
+      "version": "0.0.0"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "Qmf91yhgRLo2dhhbc5zZ7TxjMaR1oxaWaoc9zRZdi1kU4a",
+      "name": "go-multistream",
+      "version": "0.0.0"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "QmSLbJgmwYvjQuMpfW6kUt5KsJeEkjLwXTkRM5DkqR14if",
+      "name": "go-multiplex",
+      "version": "0.0.0"
+    },
+    {
+      "author": "whyrusleeping",
+      "hash": "QmVdtNvi3madh1HtiX4HByrpjQqkkHUYh6DARq2QC6NxXt",
+      "name": "spdystream",
+      "version": "0.0.0"
+    }
+  ],
+  "gxVersion": "0.7.0",
+  "language": "go",
+  "license": "",
+  "name": "go-stream-muxer",
+  "version": "0.0.0"
+}

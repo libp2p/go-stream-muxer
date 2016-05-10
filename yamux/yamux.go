@@ -6,7 +6,7 @@ import (
 	"time"
 
 	smux "github.com/jbenet/go-stream-muxer"
-	yamux "github.com/jbenet/go-stream-muxer/Godeps/_workspace/src/github.com/hashicorp/yamux"
+	yamux "gx/ipfs/QmT8nkh6VVJ2fWgAshstDkDWssAY1EXBhoraqGDfGeVx9Q/yamux"
 )
 
 // stream implements smux.Stream using a ss.Stream
@@ -77,11 +77,12 @@ type Transport yamux.Config
 
 // DefaultTransport has default settings for yamux
 var DefaultTransport = (*Transport)(&yamux.Config{
-	AcceptBacklog:       256,                // from yamux.DefaultConfig
-	EnableKeepAlive:     true,               // from yamux.DefaultConfig
-	KeepAliveInterval:   30 * time.Second,   // from yamux.DefaultConfig
-	MaxStreamWindowSize: uint32(256 * 1024), // from yamux.DefaultConfig
-	LogOutput:           ioutil.Discard,
+	AcceptBacklog:          256,                // from yamux.DefaultConfig
+	EnableKeepAlive:        true,               // from yamux.DefaultConfig
+	KeepAliveInterval:      30 * time.Second,   // from yamux.DefaultConfig
+	ConnectionWriteTimeout: 10 * time.Second,   // from yamux.DefaultConfig
+	MaxStreamWindowSize:    uint32(256 * 1024), // from yamux.DefaultConfig
+	LogOutput:              ioutil.Discard,
 })
 
 func (t *Transport) NewConn(nc net.Conn, isServer bool) (smux.Conn, error) {
