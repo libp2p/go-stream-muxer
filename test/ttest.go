@@ -13,6 +13,7 @@ import (
 	"runtime/debug"
 	"sync"
 	"testing"
+	"time"
 
 	smux "github.com/jbenet/go-stream-muxer"
 )
@@ -283,6 +284,67 @@ func SubtestStress(t *testing.T, opt Options) {
 
 }
 
+func tcpPipe(t *testing.T) (net.Conn, net.Conn) {
+	list, err := net.Listen("tcp", "0.0.0.0:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	con1, err := net.Dial("tcp", list.Addr().String())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	con2, err := list.Accept()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return con1, con2
+}
+
+func SubtestStreamOpenStress(t *testing.T, tr smux.Transport) {
+	a, b := tcpPipe(t)
+	defer a.Close()
+	defer b.Close()
+
+	muxa, err := tr.NewConn(a, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	muxb, err := tr.NewConn(b, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count := 10000
+	stress := func() {
+		for i := 0; i < count; i++ {
+			s, err := muxa.OpenStream()
+			if err != nil {
+				panic(err)
+			}
+			s.Close()
+		}
+	}
+
+	go stress()
+	go stress()
+	go stress()
+	go stress()
+	go stress()
+
+	time.Sleep(time.Millisecond * 50)
+	for i := 0; i < count*5; i++ {
+		s, err := muxb.AcceptStream()
+		if err != nil {
+			t.Fatal(err)
+		}
+		s.Close()
+	}
+}
+
 func SubtestStress1Conn1Stream1Msg(t *testing.T, tr smux.Transport) {
 	SubtestStress(t, Options{
 		tr:        tr,
@@ -359,6 +421,7 @@ func SubtestAll(t *testing.T, tr smux.Transport) {
 		SubtestStress50Conn10Stream50Msg,
 		SubtestStress1Conn1000Stream10Msg,
 		SubtestStress1Conn100Stream100Msg10MB,
+		SubtestStreamOpenStress,
 	}
 
 	for _, f := range tests {
