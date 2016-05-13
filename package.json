@@ -15,12 +15,6 @@
     },
     {
       "author": "whyrusleeping",
-      "hash": "QmT8nkh6VVJ2fWgAshstDkDWssAY1EXBhoraqGDfGeVx9Q",
-      "name": "yamux",
-      "version": "0.0.0"
-    },
-    {
-      "author": "whyrusleeping",
       "hash": "Qmf91yhgRLo2dhhbc5zZ7TxjMaR1oxaWaoc9zRZdi1kU4a",
       "name": "go-multistream",
       "version": "0.0.0"
