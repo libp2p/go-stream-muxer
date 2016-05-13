@@ -8,9 +8,6 @@ import (
 	mss "gx/ipfs/Qmf91yhgRLo2dhhbc5zZ7TxjMaR1oxaWaoc9zRZdi1kU4a/go-multistream"
 
 	smux "github.com/jbenet/go-stream-muxer"
-	multiplex "github.com/jbenet/go-stream-muxer/multiplex"
-	spdy "github.com/jbenet/go-stream-muxer/spdystream"
-	yamux "github.com/jbenet/go-stream-muxer/yamux"
 )
 
 type Transport struct {
@@ -19,25 +16,6 @@ type Transport struct {
 	tpts map[string]smux.Transport
 
 	OrderPreference []string
-}
-
-func NewTransport() *Transport {
-	mux := mss.NewMultistreamMuxer()
-	mux.AddHandler("/multiplex", nil)
-	mux.AddHandler("/spdystream", nil)
-	mux.AddHandler("/yamux", nil)
-
-	tpts := map[string]smux.Transport{
-		"/multiplex":  multiplex.DefaultTransport,
-		"/spdystream": spdy.Transport,
-		"/yamux":      yamux.DefaultTransport,
-	}
-
-	return &Transport{
-		mux:             mux,
-		tpts:            tpts,
-		OrderPreference: []string{"/yamux", "/spdystream", "/multiplex"},
-	}
 }
 
 func NewBlankTransport() *Transport {

@@ -308,40 +308,49 @@ func SubtestStreamOpenStress(t *testing.T, tr smux.Transport) {
 	defer a.Close()
 	defer b.Close()
 
-	muxa, err := tr.NewConn(a, true)
-	if err != nil {
-		t.Fatal(err)
-	}
+	count := 10000
+	go func() {
+		muxa, err := tr.NewConn(a, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		stress := func() {
+			for i := 0; i < count; i++ {
+				s, err := muxa.OpenStream()
+				if err != nil {
+					panic(err)
+				}
+				s.Close()
+			}
+		}
+
+		go stress()
+		go stress()
+		go stress()
+		go stress()
+		go stress()
+	}()
 
 	muxb, err := tr.NewConn(b, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	count := 10000
-	stress := func() {
-		for i := 0; i < count; i++ {
-			s, err := muxa.OpenStream()
-			if err != nil {
-				panic(err)
-			}
-			s.Close()
-		}
-	}
-
-	go stress()
-	go stress()
-	go stress()
-	go stress()
-	go stress()
-
 	time.Sleep(time.Millisecond * 50)
-	for i := 0; i < count*5; i++ {
-		s, err := muxb.AcceptStream()
-		if err != nil {
-			t.Fatal(err)
-		}
+
+	recv := make(chan struct{})
+	muxb.Serve(func(s smux.Stream) {
+		recv <- struct{}{}
 		s.Close()
+	})
+
+	limit := time.After(time.Second * 1000)
+	for i := 0; i < count*5; i++ {
+		select {
+		case <-recv:
+		case <-limit:
+			t.Fatal("timed out receiving streams")
+		}
 	}
 }
 
