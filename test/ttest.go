@@ -339,12 +339,12 @@ func SubtestStreamOpenStress(t *testing.T, tr smux.Transport) {
 	time.Sleep(time.Millisecond * 50)
 
 	recv := make(chan struct{})
-	muxb.Serve(func(s smux.Stream) {
+	go muxb.Serve(func(s smux.Stream) {
 		recv <- struct{}{}
 		s.Close()
 	})
 
-	limit := time.After(time.Second * 1000)
+	limit := time.After(time.Second * 10)
 	for i := 0; i < count*5; i++ {
 		select {
 		case <-recv:
