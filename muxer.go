@@ -3,6 +3,7 @@ package streammux
 import (
 	"io"
 	"net"
+	"time"
 )
 
 // Stream is a bidirectional io pipe within a connection
@@ -10,6 +11,10 @@ type Stream interface {
 	io.Reader
 	io.Writer
 	io.Closer
+
+	SetDeadline(time.Time) error
+	SetReadDeadline(time.Time) error
+	SetWriteDeadline(time.Time) error
 }
 
 // StreamHandler is a function that handles streams
