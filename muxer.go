@@ -12,6 +12,8 @@ type Stream interface {
 	io.Writer
 	io.Closer
 
+	Reset() error
+
 	SetDeadline(time.Time) error
 	SetReadDeadline(time.Time) error
 	SetWriteDeadline(time.Time) error

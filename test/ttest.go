@@ -354,6 +354,47 @@ func SubtestStreamOpenStress(t *testing.T, tr smux.Transport) {
 	}
 }
 
+func SubtestStreamReset(t *testing.T, tr smux.Transport) {
+	a, b := tcpPipe(t)
+	defer a.Close()
+	defer b.Close()
+
+	done := make(chan struct{})
+	go func() {
+		muxa, err := tr.NewConn(a, true)
+		if err != nil {
+			panic(err)
+		}
+
+		s, err := muxa.OpenStream()
+		if err != nil {
+			panic(err)
+		}
+		time.Sleep(time.Millisecond * 50)
+
+		_, err = s.Write([]byte("foo"))
+		if err == nil {
+			t.Error("should have failed to write")
+		}
+
+		s.Close()
+		done <- struct{}{}
+	}()
+
+	muxb, err := tr.NewConn(b, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	go muxb.Serve(func(s smux.Stream) {
+		s.Reset()
+		done <- struct{}{}
+	})
+
+	<-done
+	<-done
+}
+
 func SubtestStress1Conn1Stream1Msg(t *testing.T, tr smux.Transport) {
 	SubtestStress(t, Options{
 		tr:        tr,
@@ -431,6 +472,7 @@ func SubtestAll(t *testing.T, tr smux.Transport) {
 		SubtestStress1Conn1000Stream10Msg,
 		SubtestStress1Conn100Stream100Msg10MB,
 		SubtestStreamOpenStress,
+		SubtestStreamReset,
 	}
 
 	for _, f := range tests {
