@@ -96,7 +96,15 @@ func GoServe(t *testing.T, tr smux.Transport, l net.Listener) (done func()) {
 			log("accepted connection")
 			sc1, err := tr.NewConn(c1, true)
 			checkErr(t, err)
-			go sc1.Serve(echoStream)
+			go func() {
+				for {
+					str, err := sc1.AcceptStream()
+					if err != nil {
+						break
+					}
+					go echoStream(str)
+				}
+			}()
 		}
 	}()
 
@@ -124,7 +132,7 @@ func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
 
 	// serve the outgoing conn, because some muxers assume
 	// that we _always_ call serve. (this is an error?)
-	go c1.Serve(smux.NoOpHandler)
+	go c1.AcceptStream()
 
 	log("creating stream")
 	s1, err := c1.OpenStream()
@@ -148,7 +156,6 @@ func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
 }
 
 func SubtestStress(t *testing.T, opt Options) {
-
 	msgsize := 1 << 11
 	errs := make(chan error, 0) // dont block anything.
 
@@ -241,11 +248,16 @@ func SubtestStress(t *testing.T, opt Options) {
 
 		// serve the outgoing conn, because some muxers assume
 		// that we _always_ call serve. (this is an error?)
-		go c.Serve(func(s smux.Stream) {
+		go func() {
 			log("serving connection")
-			echoStream(s)
-			s.Close()
-		})
+			for {
+				str, err := c.AcceptStream()
+				if err != nil {
+					break
+				}
+				go echoStream(str)
+			}
+		}()
 
 		var wg sync.WaitGroup
 		for i := 0; i < opt.streamNum; i++ {
@@ -339,10 +351,18 @@ func SubtestStreamOpenStress(t *testing.T, tr smux.Transport) {
 	time.Sleep(time.Millisecond * 50)
 
 	recv := make(chan struct{})
-	go muxb.Serve(func(s smux.Stream) {
-		recv <- struct{}{}
-		s.Close()
-	})
+	go func() {
+		for {
+			str, err := muxb.AcceptStream()
+			if err != nil {
+				break
+			}
+			go func() {
+				recv <- struct{}{}
+				str.Close()
+			}()
+		}
+	}()
 
 	limit := time.After(time.Second * 10)
 	for i := 0; i < count*5; i++ {
@@ -359,7 +379,7 @@ func SubtestStreamReset(t *testing.T, tr smux.Transport) {
 	defer a.Close()
 	defer b.Close()
 
-	done := make(chan struct{})
+	done := make(chan struct{}, 2)
 	go func() {
 		muxa, err := tr.NewConn(a, true)
 		if err != nil {
@@ -386,10 +406,12 @@ func SubtestStreamReset(t *testing.T, tr smux.Transport) {
 		t.Fatal(err)
 	}
 
-	go muxb.Serve(func(s smux.Stream) {
-		s.Reset()
+	go func() {
+		str, err := muxb.AcceptStream()
+		checkErr(t, err)
+		str.Reset()
 		done <- struct{}{}
-	})
+	}()
 
 	<-done
 	<-done
