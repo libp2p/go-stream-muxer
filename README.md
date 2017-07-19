@@ -7,7 +7,7 @@ go-stream-muxer is a common interface for stream muxers, with common tests. It w
 
 > A test suite and interface you can use to implement a stream muxer.
 
-### Godoc: https://godoc.org/github.com/jbenet/go-stream-muxer
+### Godoc: https://godoc.org/github.com/libp2p/go-stream-muxer
 
 ## Implementations
 
@@ -25,8 +25,8 @@ Include this badge in your readme if you make a new module that uses abstract-st
 ## Installation
 
 ```sh
-go get -d github.com/jbenet/go-stream-muxer
-cd $GOPATH/src/github.com/jbenet/go-stream-muxer
+go get -d github.com/libp2p/go-stream-muxer
+cd $GOPATH/src/github.com/libp2p/go-stream-muxer
 make deps
 ```
 
@@ -37,8 +37,8 @@ import (
   "net"
   "fmt"
   "io"
-  ymux "github.com/jbenet/go-stream-muxer/yamux"
-  smux "github.com/jbenet/go-stream-muxer"
+  ymux "github.com/libp2p/go-stream-muxer/yamux"
+  smux "github.com/libp2p/go-stream-muxer"
 )
 
 func dial() {
@@ -73,8 +73,8 @@ import (
   "net"
   "fmt"
   "io"
-  ymux "github.com/jbenet/go-stream-muxer/yamux"
-  smux "github.com/jbenet/go-stream-muxer"
+  ymux "github.com/libp2p/go-stream-muxer/yamux"
+  smux "github.com/libp2p/go-stream-muxer"
 )
 
 func listen() {

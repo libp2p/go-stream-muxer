@@ -9,7 +9,7 @@ import (
 	spdy "github.com/whyrusleeping/go-smux-spdystream"
 	yamux "github.com/whyrusleeping/go-smux-yamux"
 
-	ttest "github.com/jbenet/go-stream-muxer/test"
+	ttest "github.com/libp2p/go-stream-muxer/test"
 )
 
 func TestYamux(t *testing.T) {
