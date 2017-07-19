@@ -11,10 +11,10 @@ go-stream-muxer is a common interface for stream muxers, with common tests. It w
 
 ## Implementations
 
-* [yamux](yamux)
-* [muxado](muxado)
-* [multiplex](multiplex)
-* [spdystream](spdystream)
+* [yamux](https://github.com/whyrusleeping/go-smux-yamux)
+* [muxado](https://github.com/whyrusleeping/go-smux-muxado)
+* [multiplex](https://github.com/whyrusleeping/go-smux-multiplex)
+* [spdystream](https://github.com/whyrusleeping/go-smux-spdystream)
 
 ## Badge
 
