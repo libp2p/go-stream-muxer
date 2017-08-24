@@ -37,15 +37,21 @@ import (
   "net"
   "fmt"
   "io"
-  ymux "github.com/libp2p/go-stream-muxer/yamux"
-  smux "github.com/libp2p/go-stream-muxer"
+  "os"
+
+  ymux "github.com/whyrusleeping/go-smux-yamux"
 )
 
 func dial() {
   nconn, _ := net.Dial("tcp", "localhost:1234")
   sconn, _ := ymux.DefaultTransport.NewConn(nconn, false) // false == client
 
-  go sconn.Serve(func(smux.Stream) {}) // no-op
+  go func() {
+    // no-op
+    for {
+      sconn.AcceptStream()
+    }
+  }()
 
   s1, _ := sconn.OpenStream()
   s1.Write([]byte("hello"))
@@ -73,27 +79,29 @@ import (
   "net"
   "fmt"
   "io"
-  ymux "github.com/libp2p/go-stream-muxer/yamux"
+
   smux "github.com/libp2p/go-stream-muxer"
+  ymux "github.com/whyrusleeping/go-smux-yamux"
 )
 
 func listen() {
   tr := ymux.DefaultTransport
   l, _ := net.Listen("tcp", "localhost:1234")
 
-  go func() {
-    for {
-      c, _ := l.Accept()
+  for {
+    c, _ := l.Accept()
 
-      fmt.Println("accepted connection")
-      sc, _ := tr.NewConn(c, true)
+    fmt.Println("accepted connection")
+    sc, _ := tr.NewConn(c, true)
 
-      go sc.Serve(func(s smux.Stream) {
-        fmt.Println("serving connection")
+    go func() {
+      fmt.Println("serving connection")
+      for {
+        s, _ := sc.AcceptStream()
         echoStream(s)
-      })
-    }
-  }()
+      }
+    }()
+  }
 }
 
 func echoStream(s smux.Stream) {

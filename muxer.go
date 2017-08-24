@@ -19,10 +19,6 @@ type Stream interface {
 	SetWriteDeadline(time.Time) error
 }
 
-// StreamHandler is a function that handles streams
-// (usually those opened by the remote side)
-type StreamHandler func(Stream)
-
 // NoOpHandler do nothing. close streams as soon as they are opened.
 var NoOpHandler = func(s Stream) { s.Close() }
 
@@ -39,10 +35,6 @@ type Conn interface {
 
 	// AcceptStream accepts a stream opened by the other side.
 	AcceptStream() (Stream, error)
-
-	// Serve starts a loop, accepting incoming requests and calling
-	// `StreamHandler with them. (Use _instead of_ accept. not both.)
-	Serve(StreamHandler)
 }
 
 // Transport constructs go-stream-muxer compatible connections.
