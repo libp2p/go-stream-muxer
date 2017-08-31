@@ -24,8 +24,8 @@ type Stream interface {
 	SetWriteDeadline(time.Time) error
 }
 
-// NoOpHandler do nothing. close streams as soon as they are opened.
-var NoOpHandler = func(s Stream) { s.Close() }
+// NoOpHandler do nothing. Resets streams as soon as they are opened.
+var NoOpHandler = func(s Stream) { s.Reset() }
 
 // Conn is a stream-multiplexing connection to a remote peer.
 type Conn interface {
