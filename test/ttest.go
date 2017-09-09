@@ -11,6 +11,7 @@ import (
 	"reflect"
 	"runtime"
 	"runtime/debug"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -417,6 +418,30 @@ func SubtestStreamReset(t *testing.T, tr smux.Transport) {
 	<-done
 }
 
+// check that Close also closes the underlying net.Conn
+func SubtestWriteAfterClose(t *testing.T, tr smux.Transport) {
+	a, b := tcpPipe(t)
+
+	muxa, err := tr.NewConn(a, true)
+	checkErr(t, err)
+
+	muxb, err := tr.NewConn(b, false)
+	checkErr(t, err)
+
+	err = muxa.Close()
+	checkErr(t, err)
+	err = muxb.Close()
+	checkErr(t, err)
+
+	// make sure the underlying net.Conn was closed
+	if _, err := a.Write([]byte("foobar")); err == nil || !strings.Contains(err.Error(), "use of closed network connection") {
+		t.Fatal("write should have failed")
+	}
+	if _, err := b.Write([]byte("foobar")); err == nil || !strings.Contains(err.Error(), "use of closed network connection") {
+		t.Fatal("write should have failed")
+	}
+}
+
 func SubtestStress1Conn1Stream1Msg(t *testing.T, tr smux.Transport) {
 	SubtestStress(t, Options{
 		tr:        tr,
@@ -487,6 +512,7 @@ func SubtestAll(t *testing.T, tr smux.Transport) {
 
 	tests := []TransportTest{
 		SubtestSimpleWrite,
+		SubtestWriteAfterClose,
 		SubtestStress1Conn1Stream1Msg,
 		SubtestStress1Conn1Stream100Msg,
 		SubtestStress1Conn100Stream100Msg,
