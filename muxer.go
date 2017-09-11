@@ -24,6 +24,7 @@ var NoOpHandler = func(s Stream) { s.Close() }
 
 // Conn is a stream-multiplexing connection to a remote peer.
 type Conn interface {
+	// Close closes the stream muxer and the the underlying net.Conn.
 	io.Closer
 
 	// IsClosed returns whether a connection is fully closed, so it can
