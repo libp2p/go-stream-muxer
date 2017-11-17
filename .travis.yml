@@ -2,7 +2,7 @@ language: go
 
 go:
   - tip
-  - 1.6
+  - 1.9.x
 
 before_install:
   - make deps
