@@ -151,7 +151,7 @@ func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
 	checkErr(t, err)
 
 	if string(buf2) != string(buf1) {
-		t.Error("buf1 and buf2 not equal: %s != %s", string(buf1), string(buf2))
+		t.Errorf("buf1 and buf2 not equal: %s != %s", string(buf1), string(buf2))
 	}
 	log("done")
 }
