@@ -1,20 +1,13 @@
+all: deps
 
-build: deps
-	go build ./...
-
-test: deps
-	go test ./...
-
-test_race: deps
-	go test -race -cpu 5 ./...
-
-gx-bins:
+gx:
 	go get github.com/whyrusleeping/gx
 	go get github.com/whyrusleeping/gx-go
 
-deps: gx-bins
+deps: gx
 	gx --verbose install --global
 	gx-go rewrite
 
-clean: gx-bins
+publish:
 	gx-go rewrite --undo
+
