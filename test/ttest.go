@@ -151,7 +151,7 @@ func SubtestSimpleWrite(t *testing.T, tr smux.Transport) {
 	checkErr(t, err)
 
 	if string(buf2) != string(buf1) {
-		t.Error("buf1 and buf2 not equal: %s != %s", string(buf1), string(buf2))
+		t.Errorf("buf1 and buf2 not equal: %s != %s", string(buf1), string(buf2))
 	}
 	log("done")
 }
@@ -508,33 +508,33 @@ func SubtestStress1Conn100Stream100Msg10MB(t *testing.T, tr smux.Transport) {
 	})
 }
 
-func SubtestAll(t *testing.T, tr smux.Transport) {
-
-	tests := []TransportTest{
-		SubtestSimpleWrite,
-		SubtestWriteAfterClose,
-		SubtestStress1Conn1Stream1Msg,
-		SubtestStress1Conn1Stream100Msg,
-		SubtestStress1Conn100Stream100Msg,
-		SubtestStress50Conn10Stream50Msg,
-		SubtestStress1Conn1000Stream10Msg,
-		SubtestStress1Conn100Stream100Msg10MB,
-		SubtestStreamOpenStress,
-		SubtestStreamReset,
-	}
-
-	for _, f := range tests {
-		if testing.Verbose() {
-			fmt.Fprintf(os.Stderr, "==== RUN %s\n", GetFunctionName(f))
-		}
-		f(t, tr)
-	}
+// Subtests are all the subtests run by SubtestAll
+var Subtests = []TransportTest{
+	SubtestSimpleWrite,
+	SubtestWriteAfterClose,
+	SubtestStress1Conn1Stream1Msg,
+	SubtestStress1Conn1Stream100Msg,
+	SubtestStress1Conn100Stream100Msg,
+	SubtestStress50Conn10Stream50Msg,
+	SubtestStress1Conn1000Stream10Msg,
+	SubtestStress1Conn100Stream100Msg10MB,
+	SubtestStreamOpenStress,
+	SubtestStreamReset,
 }
 
-type TransportTest func(t *testing.T, tr smux.Transport)
-
-func TestNoOp(t *testing.T) {}
-
-func GetFunctionName(i interface{}) string {
+func getFunctionName(i interface{}) string {
 	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }
+
+// SubtestAll runs all the stream multiplexer tests against the target
+// transport.
+func SubtestAll(t *testing.T, tr smux.Transport) {
+	for _, f := range Subtests {
+		t.Run(getFunctionName(f), func(t *testing.T) {
+			f(t, tr)
+		})
+	}
+}
+
+// TransportTest is a stream multiplex transport test case
+type TransportTest func(t *testing.T, tr smux.Transport)
