@@ -114,3 +114,7 @@ func echoStream(s smux.Stream) {
   fmt.Println("closing stream")
 }
 ```
+
+---
+
+The last gx published version of this module was: 3.1.0: QmVtV1y2e8W4eQgzsP6qfSpCCZ6zWYE4m6NzJjB7iswwrT
