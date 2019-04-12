@@ -1,55 +1,18 @@
 package streammux
 
-import (
-	"errors"
-	"io"
-	"net"
-	"time"
-)
+import moved "github.com/libp2p/go-libp2p/skel/mux"
 
-// ErrReset is returned when reading or writing on a reset stream.
-var ErrReset = errors.New("stream reset")
+// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.ErrReset instead.
+var ErrReset = moved.ErrReset
 
-// Stream is a bidirectional io pipe within a connection.
-type Stream interface {
-	io.Reader
-	io.Writer
+// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.MuxStream instead.
+type Stream = moved.MuxStream
 
-	// Close closes the stream for writing. Reading will still work (that
-	// is, the remote side can still write).
-	io.Closer
+// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.NoOpHandler instead.
+var NoOpHandler = moved.NoOpHandler
 
-	// Reset closes both ends of the stream. Use this to tell the remote
-	// side to hang up and go away.
-	Reset() error
+// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.MuxedConn instead.
+type Conn = moved.MuxedConn
 
-	SetDeadline(time.Time) error
-	SetReadDeadline(time.Time) error
-	SetWriteDeadline(time.Time) error
-}
-
-// NoOpHandler do nothing. Resets streams as soon as they are opened.
-var NoOpHandler = func(s Stream) { s.Reset() }
-
-// Conn is a stream-multiplexing connection to a remote peer.
-type Conn interface {
-	// Close closes the stream muxer and the the underlying net.Conn.
-	io.Closer
-
-	// IsClosed returns whether a connection is fully closed, so it can
-	// be garbage collected.
-	IsClosed() bool
-
-	// OpenStream creates a new stream.
-	OpenStream() (Stream, error)
-
-	// AcceptStream accepts a stream opened by the other side.
-	AcceptStream() (Stream, error)
-}
-
-// Transport constructs go-stream-muxer compatible connections.
-type Transport interface {
-
-	// NewConn constructs a new connection
-	NewConn(c net.Conn, isServer bool) (Conn, error)
-}
+// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.Multiplexer instead.
+type Transport = moved.Multiplexer
