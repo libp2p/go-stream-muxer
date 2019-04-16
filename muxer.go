@@ -1,18 +1,18 @@
 package streammux
 
-import moved "github.com/libp2p/go-libp2p/skel/mux"
+import moved "github.com/libp2p/go-libp2p-core/mux"
 
-// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.ErrReset instead.
+// Deprecated: Use github.com/libp2p/go-libp2p-core/mux.ErrReset instead.
 var ErrReset = moved.ErrReset
 
-// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.MuxStream instead.
+// Deprecated: Use github.com/libp2p/go-libp2p-core/mux.MuxStream instead.
 type Stream = moved.MuxStream
 
-// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.NoOpHandler instead.
+// Deprecated: Use github.com/libp2p/go-libp2p-core/mux.NoOpHandler instead.
 var NoOpHandler = moved.NoOpHandler
 
-// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.MuxedConn instead.
+// Deprecated: Use github.com/libp2p/go-libp2p-core/mux.MuxedConn instead.
 type Conn = moved.MuxedConn
 
-// Deprecated: Use github.com/libp2p/go-libp2p/skel/mux.Multiplexer instead.
+// Deprecated: Use github.com/libp2p/go-libp2p-core/mux.Multiplexer instead.
 type Transport = moved.Multiplexer
