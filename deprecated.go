@@ -5,7 +5,7 @@ import moved "github.com/libp2p/go-libp2p-core/mux"
 // Deprecated: Use github.com/libp2p/go-libp2p-core/mux.ErrReset instead.
 var ErrReset = moved.ErrReset
 
-// Deprecated: Use github.com/libp2p/go-libp2p-core/mux.MuxStream instead.
+// Deprecated: Use github.com/libp2p/go-libp2p-core/mux.MuxedStream instead.
 type Stream = moved.MuxedStream
 
 // Deprecated: Use github.com/libp2p/go-libp2p-core/mux.NoOpHandler instead.
