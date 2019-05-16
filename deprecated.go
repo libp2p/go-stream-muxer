@@ -8,8 +8,8 @@ var ErrReset = core.ErrReset
 // Deprecated: use github.com/libp2p/go-libp2p-core/mux.MuxedStream instead.
 type Stream = core.MuxedStream
 
-// Deprecated: use github.com/libp2p/go-libp2p-core/mux.NoOpHandler instead.
-var NoOpHandler = core.NoOpHandler
+// Deprecated: use github.com/libp2p/go-libp2p-core/mux.NoopHandler instead.
+var NoOpHandler = core.NoopHandler
 
 // Deprecated: use github.com/libp2p/go-libp2p-core/mux.MuxedConn instead.
 type Conn = core.MuxedConn
